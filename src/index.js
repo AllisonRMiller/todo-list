@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import 'bootstrap/dist/css/bootstrap.css';
+// import '/js/all.js';
+// import './index.css';
+import App from './components/App';
+// import TodoApp from './components/body';
+// import Navbar from "./components/navbar";
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<App />, document.getElementById('root'));
