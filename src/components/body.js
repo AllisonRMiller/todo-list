@@ -1,5 +1,5 @@
 import React from 'react';
-import Editable from "./editable";
+
 // import ReactDOM from 'react-dom';
 
 
