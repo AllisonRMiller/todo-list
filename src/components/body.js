@@ -36,6 +36,10 @@ import React from 'react';
 //     }
 // }
 
+// Filter items by this.state.status
+// done: classname = muted <s>
+// deleted: classname = font-danger <s>
+
 class TodoApp extends React.Component {
     constructor(props) {
         super(props);
@@ -53,7 +57,7 @@ class TodoApp extends React.Component {
     //             await window.localStorage.setItem("todos", JSON.stringify(this.state.items));
     //         }}
 
-
+    
     render() {
         return (
             <div>
@@ -75,7 +79,13 @@ class TodoApp extends React.Component {
                 </form>
             </div>
         );
+
     }
+    // this function doesn't do anything yet but will be included in the filter
+    // checkStatus() {
+    //     console.log("checkStatus ran", linkname)
+    //     return this.state.status == linkname
+    // }
 
     plusButton(e) {
         // open and edit the line
@@ -87,9 +97,9 @@ class TodoApp extends React.Component {
         this.setState({ text: e.target.value });
     }
 
-    handleDone(prevState) {
+    async handleDone(prevState) {
         // this is check button
-        this.setState({ status: "done" })
+        await this.setState({ status: "done" })
         console.log("handleDone ran:", this.state.status)
     }
 
@@ -114,11 +124,12 @@ class TodoApp extends React.Component {
             text: '',
             status: "todo",
         }));
+        console.log(this.state);
     }
 }
 
 class TodoList extends TodoApp {
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
