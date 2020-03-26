@@ -1,54 +1,21 @@
 import React from 'react';
 
-// import ReactDOM from 'react-dom';
 
 
+// change currentlist in state based on clicking in navbar, possibly move this function to app
 
 
-// class Body extends React.Component {
-//     constructor(props) {
-//         super(props);
-
-//         this.state = { currentList: "todo" };
-//         this.showList = this.bind.showList(this);
-//         this.updateList = this.bind.updateList(this);
-//     }
-
-//     showList() {
-//         this.state = 
-//     }
-
-// }
-
-
-
-// class Body extends React.Component{
-//     constructor(props){
-//         super(props);
-//         this.state = { currentList: "toDoList"}
-//         this.showList = this.bind.showList(this);
-//     }
-
-
-
-//     showList(e){
-//         this.setState = {list: e.target.id} 
-//     }
-// }
-
-// Filter items by this.state.status
-// done: classname = muted <s>
-// deleted: classname = font-danger <s>
 
 class TodoApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { items: [], text: "", status: "todo", };
+        this.state = { items: [], text: "", status: "todo", currentList: "todo" };
         // this.showList = this.bind.showList(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleDone = this.handleDone.bind(this);
+        // this.checkStatus = this.checkStatus.bind(this);
     }
 
     //     async componentDidMount() {
@@ -57,7 +24,7 @@ class TodoApp extends React.Component {
     //             await window.localStorage.setItem("todos", JSON.stringify(this.state.items));
     //         }}
 
-    
+
     render() {
         return (
             <div>
@@ -83,8 +50,9 @@ class TodoApp extends React.Component {
     }
     // this function doesn't do anything yet but will be included in the filter
     // checkStatus() {
-    //     console.log("checkStatus ran", linkname)
-    //     return this.state.status == linkname
+    //     console.log("checkStatus ran", item.status);
+    //     return item.status == this.state.currentList;
+
     // }
 
     plusButton(e) {
@@ -94,18 +62,50 @@ class TodoApp extends React.Component {
 
 
     handleChange(e) {
+        e.preventDefault();
         this.setState({ text: e.target.value });
+        console.log("handle change ran")
     }
 
-    async handleDone(prevState) {
+    handleDone(e,text,id,place) {
         // this is check button
-        await this.setState({ status: "done" })
+        e.preventDefault();
+        const newItems = this.props.items;
+        console.log(this.props.items);
+        console.log("NI1: ",newItems);
+        console.log("place: ",place);
+        newItems.splice(
+            place, 1, {
+            text: text,
+            id: id,
+            place: place,
+            status: "done"})
+            console.log("NI2: ",newItems)
+        this.setState(state => ({
+            items: newItems
+            }))
+        
         console.log("handleDone ran:", this.state.status)
     }
 
-    handleDelete(prevState) {
+    handleDelete(e,text,id,place) {
         // this is minus button
-        this.setState({ status: "remove" })
+
+        e.preventDefault();
+        const newItems = this.props.items;
+        console.log(this.props.items);
+        console.log("NI1: ",newItems);
+        console.log("place: ",place);
+        newItems.splice(
+            place, 1, {
+            text: text,
+            id: id,
+            place: place,
+            status: "remove"})
+            console.log("NI2: ",newItems)
+        this.setState(state => ({
+            items: newItems
+            }))
         console.log("handleDelete ran:", this.state.status)
     }
 
@@ -117,6 +117,7 @@ class TodoApp extends React.Component {
         const newItem = {
             text: this.state.text,
             id: Date.now(),
+            place: this.state.items.length,
             status: this.state.status
         };
         this.setState(state => ({
@@ -139,11 +140,11 @@ class TodoList extends TodoApp {
             <div className="row text-center">
                 <div className="col">
                     <ul className="list-group">
-                        {this.props.items.map(item => (
+                        {this.props.items.filter(x => { console.log("checkStatus ran", x.status); return x.status === this.state.currentList }).map(item => (
                             <li className="list-group-item" key={item.id}>{item.text}
-                                <button onClick={this.handleChange}>+</button>
-                                <button onClick={this.handleDone}>f00c</button>
-                                <button onClick={this.handleDelete}>-</button></li>
+                                {/* <button onClick={this.handleChange}>+</button> */}
+                                <button onClick={(e) => this.handleDone(e,item.text,item.id,item.place)}>f00c</button>
+                                <button onClick={(e) => this.handleDelete(e,item.text,item.id,item.place)}>-</button></li>
                         ))}
                     </ul>
                 </div>

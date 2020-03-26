@@ -47,9 +47,9 @@ class App extends React.Component {
             <All />
             :
             null
-        }
-        {
-          this.state.currentPage === "Completed" ?
+        }*/}
+        {/* {
+          this.state.currentList === "Completed" ?
             <Completed />
             :
             null
