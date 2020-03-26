@@ -9,7 +9,7 @@ import React from 'react';
 class TodoApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { items: [], text: "", status: "todo", currentList: "todo" };
+        this.state = { items: [], text: "", status: "todo", currentList: "all" };
         // this.showList = this.bind.showList(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,13 +18,8 @@ class TodoApp extends React.Component {
         // this.checkStatus = this.checkStatus.bind(this);
     }
 
-    //     async componentDidMount() {
-    // 		console.log("the component did mount")
-    // {
-    //             await window.localStorage.setItem("todos", JSON.stringify(this.state.items));
-    //         }}
-
-
+    
+    
     render() {
         return (
             <div>
@@ -48,16 +43,15 @@ class TodoApp extends React.Component {
         );
 
     }
-    // this function doesn't do anything yet but will be included in the filter
-    // checkStatus() {
-    //     console.log("checkStatus ran", item.status);
-    //     return item.status == this.state.currentList;
-
-    // }
-
+    
+    async componentDidMount() {
+        console.log("the component did mount")
+{
+            await window.localStorage.setItem("todos", JSON.stringify(this.state.items));
+        }}
+    
     plusButton(e) {
         // open and edit the line
-        // add a new blank line if there is not currently a blank line
     }
 
 
@@ -140,7 +134,7 @@ class TodoList extends TodoApp {
             <div className="row text-center">
                 <div className="col">
                     <ul className="list-group">
-                        {this.props.items.filter(x => { console.log("checkStatus ran", x.status); return x.status === this.state.currentList }).map(item => (
+                        {this.props.items.filter(x => { console.log("checkStatus ran", x.status); return (this.state.currentList === "all" ? x : x.status === this.state.currentList) }).map(item => (
                             <li className="list-group-item" key={item.id}>{item.text}
                                 {/* <button onClick={this.handleChange}>+</button> */}
                                 <button onClick={(e) => this.handleDone(e,item.text,item.id,item.place)}>f00c</button>
