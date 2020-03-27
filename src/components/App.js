@@ -27,6 +27,7 @@ class App extends React.Component {
   }
   render() {
     return (
+      <div className = "container">
       <div className="App">
         {/* <Navbar
           updatePage={this.updatePage}
@@ -57,6 +58,7 @@ class App extends React.Component {
             :
             null
         } */}
+        </div>
       </div>
     )
   }

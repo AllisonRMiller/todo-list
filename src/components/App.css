@@ -2,6 +2,10 @@
   text-decoration: line-through;
 }
 
+html{
+  background-color:  #5c8a8a;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

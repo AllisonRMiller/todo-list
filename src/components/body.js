@@ -17,70 +17,73 @@ class TodoApp extends React.Component {
         this.handleDoneEverything = this.handleDoneEverything.bind(this);
         this.resetTodo = this.resetTodo.bind(this);
     }
-    
-    async componentDidMount(){
+
+    async componentDidMount() {
         var oldItems = JSON.parse(window.localStorage.getItem("todos"));
         console.log(oldItems);
-        if (oldItems === null){return}
-        else
-        {await this.setState({items: oldItems })} 
+        if (oldItems === null) { return }
+        else { await this.setState({ items: oldItems }) }
     }
-    
-    
+
+
     render() {
+        let tempList = this.state.items;
+        if (this.state.currentList === "ToDo"){tempList = this.state.items.filter((item) => item.status==="ToDo")}
+        else if (this.state.currentList ==="Completed"){tempList = this.state.items.filter((item)=> item.status==="Completed")}
+        
         return (
             <div>
-            <div className = "container">
-                <Navbar curList={this.state.currentList}/>
-                <TodoList items={this.state.items} />
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="new-todo">
-                        What needs to be done?
+                <div className="container">
+                    <Navbar curList={this.state.currentList} />
+                    <TodoList items={tempList}/>
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor="new-todo">
+                            What needs to be done?
             </label>
-                    <input
-                        className = "ml-2 mr-2"
-                        id="new-todo"
-                        onChange={this.handleChange}
-                        value={this.state.text}
-                        status={this.state.status}
-                    />
-                    <button>
-                        +
+                        <input
+                            className="ml-2 mr-2"
+                            id="new-todo"
+                            onChange={this.handleChange}
+                            value={this.state.text}
+                            status={this.state.status}
+                        />
+                        <button>
+                            +
                     </button>
-                </form>
-                <button className="mr-2" onClick={this.handleDoneEverything}>
-                    Check All
+                    </form>
+                    <button className="mr-2" onClick={this.handleDoneEverything}>
+                        Check All
                 </button>
-                <button className = "mr-2" onClick={this.resetTodo}>
-                    Reset Checked
+                    <button className="mr-2" onClick={this.resetTodo}>
+                        Reset Checked
                 </button>
-                <button className = "mr-2" onClick={this.purgeComplete}>
-                    Remove Checked
+                    <button className="mr-2" onClick={this.purgeComplete}>
+                        Remove Checked
                 </button>
-                <button onClick={this.saveList}>
-                    Save List
+                    <button onClick={this.saveList}>
+                        Save List
                 </button>
                 </div>
             </div>
         );
 
     }
-    
 
-// This doesn't work!!!!
-    async updateList(e,newList){
+
+    // This doesn't work!!!!
+    async updateList(e, newList) {
 
         e.preventDefault();
-        console.log("updateList input: ",newList, this.props, this.state);
+        console.log("updateList input: ", newList, this.props, this.state);
         await this.setState(state => ({
             currentList: newList
-            }));
-            console.log("new currentList: ",this.state.currentList)
-            
-    }
-    
+        }));
+        console.log("new currentList: ", this.state.currentList)
 
-    async saveList(){
+    }
+
+
+    async saveList() {
         await localStorage.setItem("todos", JSON.stringify(this.state.items))
     }
 
@@ -89,71 +92,72 @@ class TodoApp extends React.Component {
     handleChange(e) {
         e.preventDefault();
         this.setState({ text: e.target.value });
-        console.log("handle change ran")
     }
 
-    async handleDoneEverything(){
+    async handleDoneEverything() {
         const allItems = this.state.items;
-        allItems.map((item) => item.status = item.status ==="remove"? "remove" : "Completed");
+        allItems.map((item) => item.status = item.status === "remove" ? "remove" : "Completed");
         await this.setState(state => ({
             items: allItems
-            }))
+        }))
     }
 
-    async resetTodo(){
+    async resetTodo() {
         const allItems = this.state.items;
-        allItems.map((item) => item.status = item.status ==="remove"? "remove" : "ToDo");
+        allItems.map((item) => item.status = item.status === "remove" ? "remove" : "ToDo");
         await this.setState(state => ({
             items: allItems
-            }))
+        }))
     }
-    async purgeComplete(){
+    async purgeComplete() {
         const allItems = this.state.items;
-        allItems.map((item) => item.status=== "Complete" ? "remove": item.status);
+        allItems.map((item) => item.status === "Complete" ? "remove" : item.status);
         await this.setState(state => ({
             items: allItems
-            }))
+        }))
     }
 
-    async handleDone(e,item) {
+    async handleDone(e, item) {
         // this is check button
         e.preventDefault();
-            const newItems = this.props.items;
+        const newItems = this.props.items;
         console.log(this.props.items);
-        console.log("NI1: ",newItems);
-        console.log("place: ",item.place);
+        console.log("NI1: ", newItems);
+        console.log("place: ", item.place);
         newItems.splice(
             item.place, 1, {
             text: item.text,
             id: item.id,
             place: item.place,
-            status: item.status === "Completed" ? "ToDo": "Completed"})
-            console.log("NI2: ",newItems)
+            status: item.status === "Completed" ? "ToDo" : "Completed"
+        })
+        console.log("NI2: ", newItems)
         await this.setState(state => ({
             items: newItems
-            }))
-        
+        }))
+
         console.log("handleDone ran:", this.state.status)
     }
 
-    async handleDelete(e,item) {
+    async handleDelete(e, item) {
         // this is minus button
 
         e.preventDefault();
         const newItems = this.props.items;
         console.log(this.props.items);
-        console.log("NI1: ",newItems);
-        console.log("place: ",item.place);
+        console.log("NI1: ", newItems);
+        console.log("place: ", item.place);
         newItems.splice(
             item.place, 1, {
             text: item.text,
             id: item.id,
             place: item.place,
-            status: item.status === "remove" ? "ToDo": "remove"})
-            console.log("NI2: ",newItems)
+            status: item.status === "remove" ? "ToDo" : "remove"
+        })
+        console.log("NI2: ", newItems)
         await this.setState(state => ({
             items: newItems
-            }))
+        }))
         console.log("handleDelete ran:", this.state.status)
     }
 
@@ -179,46 +183,47 @@ class TodoApp extends React.Component {
 
 
 class Navbar extends TodoApp {
-	constructor(props) {
-		super(props)
-		this.navbarLinks = [
-			"ToDo",
-			"All",
-			"Completed"
-			]
-	}
+    constructor(props) {
+        super(props)
+        this.navbarLinks = [
+            "ToDo",
+            "All",
+            "Completed"
+        ]
+    }
 
-	render() {
-		const navLinksinHTML = this.navbarLinks.map((link, index) => {
-			return (
-				<React.Fragment key={index}>
-					<a
-						onClick={(e) => this.updateList(e,link)}
-						href="#"
+    render() {
+        const navLinksinHTML = this.navbarLinks.map((link, index) => {
+            return (
+                <React.Fragment key={index}>
+                    <a
+                        onClick={(e) => this.updateList(e, link)}
+                        href="#"
 
-					>
-						{link}
-					</a>
-					{this.navbarLinks.length - 1 === index ? null : (<> | </>)}
-				</React.Fragment>
-			)
-		})
-		return (
-			<h2 className="d-inline-flex">
-				{navLinksinHTML}
-			</h2>
-		)
-	}
+                    >
+                        {link}
+                    </a>
+                    {this.navbarLinks.length - 1 === index ? null : (<> | </>)}
+                </React.Fragment>
+            )
+        })
+        return (
+            <h2 className="d-inline-flex">
+                {navLinksinHTML}
+            </h2>
+        )
+    }
 }
 class TodoList extends TodoApp {
     constructor(props) {
         super(props)
     }
 
-    stylin(item){
-        if (item.status === "Completed"){return "list-group-item text-success"}
-        else if (item.status=== "remove"){return "list-group-item text-danger"}
-        else {return "list-group-item"}
+    stylin(item) {
+        var listStyle = "list-group-item";
+        if (item.status === "Completed") { listStyle = listStyle + " text-success" }
+        else if (item.status === "remove") { listStyle = listStyle + " text-danger" }
+        return listStyle;
 
     }
 
@@ -227,11 +232,11 @@ class TodoList extends TodoApp {
             <div className="row text-left">
                 <div className="col">
                     <ul className="list-group">
-                        {this.props.items.filter(x => { console.log("checkStatus ran", x.status); return (this.state.currentList === "All" ? x : x.status === this.state.currentList) }).map(item => (
-                            <li className={this.stylin(item)}  key={item.id}>
+                        {this.props.items.map(item => (
+                            <li className={this.stylin(item)} key={item.id}>
                                 {item.text}
-                                <button className = "ml-2" onClick={(e) => this.handleDone(e,item)}> Done </button>
-                                <button onClick={(e) => this.handleDelete(e,item)}> Remove </button>
+                                <button className="ml-2" onClick={(e) => this.handleDone(e, item)}> Done </button>
+                                <button onClick={(e) => this.handleDelete(e, item)}> Remove </button>
                             </li>
                         ))}
                     </ul>
