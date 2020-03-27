@@ -21,7 +21,7 @@ class Navbar extends React.Component {
 					>
 						{link}
 					</a>
-					{this.navbarLinks.length - 1 === index ? null : (<> • </>)}
+					{this.navbarLinks.length - 1 === index ? null : (<> | </>)}
 				</React.Fragment>
 			)
 		})
